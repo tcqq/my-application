@@ -27,11 +27,15 @@ class HireMilestonesAdapter(
         holder.bind(getItem(position), onDeleteClick)
     }
 
-    private lateinit var context: Context
+    override fun getItemViewType(position: Int): Int {
+        return getItem(position).id
+    }
 
     inner class ViewHolder(
         private val binding: ItemHireMilestonesBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        private lateinit var context: Context
 
         fun bind(
             item: HireMilestones,
