@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<HireViewModel>()
     private lateinit var milestonesAdapter: HireMilestonesAdapter
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -35,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadMilestones()
 
         binding.addMilestone.setOnClickListener {
-            isNextClicked = false
             viewModel.addMilestones(milestonesAdapter.currentList)
         }
 
@@ -56,32 +54,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_next -> {
-                // FIXME: only check first item
-                var isError = false
-                var isAlreadyError = false
-                isNextClicked = true
-                var postition = 0
                 for ((index, mileStoneItem) in milestonesAdapter.currentList.withIndex()) {
                     if (mileStoneItem.isError) {
-                        isAlreadyError = true
-                        break
-                    }
-                    if (!mileStoneItem.isDays) {
-                        isError = true
-                        postition = index
-                        break
-                    }
-
-                }
-                if (!isAlreadyError){
-                    if (isError) {
-                        milestonesAdapter.notifyItemChanged(postition)
-                    } else {
-                        Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
+                        with(binding.recyclerView.findViewHolderForAdapterPosition(index) as HireMilestonesAdapter.ViewHolder) {
+                            checkData()
+                        }
+                        return false
                     }
                 }
-//                if (milestonesAdapter.checkData().not()) return false
-
+                Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -90,6 +71,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val WORK_DAYS_MIN = 1
         const val WORK_DAYS_MAX = 365
-        var isNextClicked: Boolean = false
     }
 }

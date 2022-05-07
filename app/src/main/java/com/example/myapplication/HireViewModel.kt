@@ -28,7 +28,7 @@ class HireViewModel @Inject constructor(
         val list = arrayListOf<HireMilestones>()
         milestones.let {
             list.addAll(it)
-            list.add(0, HireMilestones("${Math.random()}", false, false))
+            list.add(0, HireMilestones("${Math.random()}"))
         }
         this.isAdd.value = true
         this.milestones.value = list

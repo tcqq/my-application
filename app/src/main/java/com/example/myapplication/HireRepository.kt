@@ -10,7 +10,7 @@ class HireRepository @Inject constructor() {
 
     fun getRegions(): ArrayList<HireMilestones> {
         val items = arrayListOf<HireMilestones>()
-        items.add(HireMilestones("1", false, false))
+        items.add(HireMilestones("1"))
         return items
     }
 }
