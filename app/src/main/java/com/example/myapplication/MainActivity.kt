@@ -54,10 +54,12 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_next -> {
-                for ((index, mileStoneItem) in milestonesAdapter.currentList.withIndex()) {
+                for ((position, mileStoneItem) in milestonesAdapter.currentList.withIndex()) {
                     if (mileStoneItem.isError) {
-                        with(binding.recyclerView.findViewHolderForAdapterPosition(index) as HireMilestonesAdapter.ViewHolder) {
-                            checkData()
+                        binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
+                            with(it as HireMilestonesAdapter.ViewHolder) {
+                                checkData()
+                            }
                         }
                         return false
                     }
