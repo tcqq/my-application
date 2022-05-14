@@ -14,9 +14,6 @@ class HireViewModel @Inject constructor(
     private val repository: HireRepository
 ) : ViewModel() {
 
-    /**
-     * Add or Delete
-     */
     val isAdd = MutableLiveData<Boolean>()
     val milestones = MutableLiveData<ArrayList<HireMilestones>>()
 
@@ -28,7 +25,7 @@ class HireViewModel @Inject constructor(
         val list = arrayListOf<HireMilestones>()
         milestones.let {
             list.addAll(it)
-            list.add(0, HireMilestones(milestones.size))
+            list.add(0, HireMilestones(milestones.size.toString()))
         }
         this.isAdd.value = true
         this.milestones.value = list

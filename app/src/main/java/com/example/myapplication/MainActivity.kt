@@ -54,20 +54,23 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_next -> {
-                for ((position, mileStoneItem) in milestonesAdapter.currentList.withIndex()) {
-                    if (mileStoneItem.isError) {
-                        binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
-                            with(it as HireMilestonesAdapter.ViewHolder) {
-                                checkData()
-                            }
-                        }
-                        return false
-                    }
+                if (checkData()) {
+                    Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkData(): Boolean {
+        milestonesAdapter.currentList.indices.forEach { position ->
+            binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
+                with(it as HireMilestonesAdapter.ViewHolder) {
+                    if (checkData().not()) return false
+                }
+            }
+        }
+        return true
     }
 
     companion object {

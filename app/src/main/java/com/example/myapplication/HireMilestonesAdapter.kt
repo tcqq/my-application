@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -28,7 +29,7 @@ class HireMilestonesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position).id
+        return getItem(position).id.hashCode()
     }
 
     inner class ViewHolder(
@@ -42,41 +43,38 @@ class HireMilestonesAdapter(
             onDeleteClick: (HireMilestones, Int) -> Unit
         ) {
             context = itemView.context
-
             with(binding) {
+                item.days?.let { days.setText(it) }
                 delete.setOnClickListener {
                     onDeleteClick(item, absoluteAdapterPosition)
                 }
-                editTextDays.doOnTextChanged { text, _, _, _ ->
-                    checkDays(context, this, text, absoluteAdapterPosition)
+                days.doAfterTextChanged {
+                    checkDays(context, binding, absoluteAdapterPosition)
                 }
             }
         }
 
-        fun checkData() {
-            checkDays(context, binding, binding.editTextDays.text, absoluteAdapterPosition)
+        fun checkData(): Boolean {
+            return checkDays(context, binding, absoluteAdapterPosition)
         }
     }
 
     fun checkDays(
         context: Context,
         binding: ItemHireMilestonesBinding,
-        text: CharSequence?,
         position: Int
     ): Boolean {
+        val text = binding.days.text
         if (text.isNullOrBlank()) {
-            currentList[position].isError = true
             binding.textInputLayoutDays.error = context.getString(R.string.please_enter_days)
             return false
         }
         return try {
             val days = Integer.parseInt(text.toString())
             if (text.length > 1 && text.startsWith("0")) {
-                currentList[position].isError = true
-                binding.editTextDays.text?.replace(0, 1, "")
+                binding.days.text?.replace(0, 1, "")
                 false
             } else if (days < WORK_DAYS_MIN) {
-                currentList[position].isError = true
                 binding.textInputLayoutDays.error =
                     context.getString(
                         R.string.days_cannot_be_less_than,
@@ -84,7 +82,6 @@ class HireMilestonesAdapter(
                     )
                 false
             } else if (days > WORK_DAYS_MAX) {
-                currentList[position].isError = true
                 binding.textInputLayoutDays.error =
                     context.getString(
                         R.string.days_cannot_be_greater_than,
@@ -92,7 +89,7 @@ class HireMilestonesAdapter(
                     )
                 false
             } else {
-                currentList[position].isError = false
+                currentList[position].days = text.toString()
                 binding.textInputLayoutDays.isErrorEnabled = false
                 true
             }
