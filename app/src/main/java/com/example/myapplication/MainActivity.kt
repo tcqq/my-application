@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         milestonesAdapter = HireMilestonesAdapter { hireMilestones, position ->
-            viewModel.deleteMilestones(milestonesAdapter.currentList, hireMilestones)
+            viewModel.deleteMilestones(hireMilestones)
         }
         binding.recyclerView.apply {
             setHasFixedSize(true)
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadMilestones()
 
         binding.addMilestone.setOnClickListener {
-            viewModel.addMilestones(milestonesAdapter.currentList)
+            viewModel.addMilestones()
         }
 
         observe(viewModel.milestones) {

@@ -3,6 +3,7 @@ package com.example.myapplication
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 /**
@@ -15,27 +16,26 @@ class HireViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isAdd = MutableLiveData<Boolean>()
-    val milestones = MutableLiveData<ArrayList<HireMilestones>>()
+    val milestones = MutableLiveData<List<HireMilestones>>()
+    private val itemId = AtomicInteger(0)
 
     fun loadMilestones() {
         milestones.value = repository.getRegions()
     }
 
-    fun addMilestones(milestones: List<HireMilestones>) {
-        val list = arrayListOf<HireMilestones>()
-        milestones.let {
-            list.addAll(it)
-            list.add(0, HireMilestones(milestones.size.toString()))
-        }
-        this.isAdd.value = true
-        this.milestones.value = list
+    fun addMilestones() {
+        val list = mutableListOf<HireMilestones>()
+        list.add(0, HireMilestones(itemId.incrementAndGet().toString()))
+        list.addAll(milestones.value.orEmpty())
+        isAdd.value = true
+        milestones.value = list
     }
 
-    fun deleteMilestones(milestones: List<HireMilestones>, hireMilestones: HireMilestones) {
-        val list = arrayListOf<HireMilestones>()
-        list.addAll(milestones)
+    fun deleteMilestones(hireMilestones: HireMilestones) {
+        val list = mutableListOf<HireMilestones>()
+        list.addAll(milestones.value.orEmpty())
         list.remove(hireMilestones)
-        this.isAdd.value = false
-        this.milestones.value = list
+        isAdd.value = false
+        milestones.value = list
     }
 }
