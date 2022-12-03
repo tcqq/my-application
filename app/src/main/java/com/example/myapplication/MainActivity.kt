@@ -71,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                 milestonesAdapter.notifyItemChanged(index)
                 validData = false
                 return@forEachIndexed
+            }else{
+                model.daysError = null
             }
         }
         return validData
