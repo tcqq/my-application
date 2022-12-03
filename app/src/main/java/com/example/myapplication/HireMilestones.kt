@@ -6,5 +6,8 @@ package com.example.myapplication
  */
 data class HireMilestones(
     val id: String,
-    var days: String? = null
+    var days: String? = null,
+    var title: String? = null,
+    var amount: String? = null,
+    var daysError : String ? = null,
 )
