@@ -51,11 +51,26 @@ class HireMilestonesAdapter(
                 days.doAfterTextChanged {
                     checkDays(context, binding, absoluteAdapterPosition)
                 }
+                if (item.validData.not()) checkData()
             }
         }
 
         fun checkData(): Boolean {
-            return checkDays(context, binding, absoluteAdapterPosition)
+            var validData = false
+            checkDays(context, binding, absoluteAdapterPosition)
+            run breaking@{
+                currentList.forEachIndexed { index, model ->
+                    if (model.days == null) {
+                        validData = false
+                        model.validData = false
+                        return@breaking
+                    } else {
+                        validData = true
+                        model.validData = true
+                    }
+                }
+            }
+            return validData
         }
     }
 
