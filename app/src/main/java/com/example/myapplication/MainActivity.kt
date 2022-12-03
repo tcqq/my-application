@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                 return@forEachIndexed
             }else{
                 model.daysError = null
+                milestonesAdapter.notifyItemChanged(index)
             }
         }
         return validData
