@@ -54,16 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_next -> {
-                var validData = true
-                milestonesAdapter.currentList.forEachIndexed { index, model ->
-                    if (model.days.isNullOrEmpty()) {
-                        binding.recyclerView.smoothScrollToPosition(index)
-                        model.daysError = getString(R.string.please_enter_days)
-                        milestonesAdapter.notifyDataSetChanged()
-                        validData = false
-                    }
-                }
-                if (validData) {
+                if(checkData()){
                     Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -72,14 +63,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkData(): Boolean {
-        milestonesAdapter.currentList.indices.forEach { position ->
-            binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
-                with(it as HireMilestonesAdapter.ViewHolder) {
-                    if (checkData().not()) return false
-                }
+        var validData = true
+        milestonesAdapter.currentList.forEachIndexed { index, model ->
+            if (model.days.isNullOrEmpty()) {
+                binding.recyclerView.smoothScrollToPosition(index)
+                model.daysError = getString(R.string.please_enter_days)
+                milestonesAdapter.notifyDataSetChanged()
+                validData = false
+                return@forEachIndexed
             }
         }
-        return true
+        return validData
     }
 
     companion object {
