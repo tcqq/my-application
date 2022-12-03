@@ -7,8 +7,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.MainActivity.Companion.WORK_DAYS_MAX
-import com.example.myapplication.MainActivity.Companion.WORK_DAYS_MIN
 import com.example.myapplication.databinding.ItemHireMilestonesBinding
 
 /**
@@ -47,15 +45,11 @@ class HireMilestonesAdapter(
                 delete.setOnClickListener {
                     onDeleteClick(item, absoluteAdapterPosition)
                 }
-                if(!item.daysError.isNullOrEmpty()){
-                    checkDays(context, binding, absoluteAdapterPosition)
+                if (item.isError) {
+                    checkData()
                 }
                 days.doAfterTextChanged {
-                    if(checkDays(context, binding, absoluteAdapterPosition)){
-                        item.days = days.text.toString()
-                    }else{
-                        item.days = ""
-                    }
+                    checkDays(context, binding, absoluteAdapterPosition)
                 }
             }
         }
@@ -71,37 +65,14 @@ class HireMilestonesAdapter(
         position: Int
     ): Boolean {
         val text = binding.days.text
-        if (text.isNullOrBlank()) {
+        currentList[position].days = null
+        return if (text.isNullOrBlank()) {
             binding.textInputLayoutDays.error = context.getString(R.string.please_enter_days)
-            return false
-        }
-        return try {
-            val days = Integer.parseInt(text.toString())
-            if (text.length > 1 && text.startsWith("0")) {
-                binding.days.text?.replace(0, 1, "")
-                false
-            } else if (days < WORK_DAYS_MIN) {
-                binding.textInputLayoutDays.error =
-                    context.getString(
-                        R.string.days_cannot_be_less_than,
-                        WORK_DAYS_MIN
-                    )
-                false
-            } else if (days > WORK_DAYS_MAX) {
-                binding.textInputLayoutDays.error =
-                    context.getString(
-                        R.string.days_cannot_be_greater_than,
-                        WORK_DAYS_MAX
-                    )
-                false
-            } else {
-                currentList[position].days = text.toString()
-                binding.textInputLayoutDays.isErrorEnabled = false
-                true
-            }
-        } catch (nfe: NumberFormatException) {
-            println(nfe)
             false
+        } else {
+            currentList[position].days = text.toString()
+            binding.textInputLayoutDays.isErrorEnabled = false
+            true
         }
     }
 

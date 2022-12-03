@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_next -> {
-                if(checkData()){
+                if (checkData()) {
                     Toast.makeText(this, "OPEN", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -62,29 +62,33 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkData(): Boolean {
-        var validData = true
-        run breaking@ {
-            milestonesAdapter.currentList.forEachIndexed { index, model ->
-                if (model.days.isNullOrEmpty()) {
-                    binding.recyclerView.smoothScrollToPosition(index)
-                    model.daysError = getString(R.string.please_enter_days)
-                    validData = false
-                    return@breaking
-                }else{
-                    model.daysError = null
+/*    private fun checkData(): Boolean {
+        milestonesAdapter.currentList.indices.forEach { position ->
+            binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
+                with(it as HireMilestonesAdapter.ViewHolder) {
+                    if (checkData().not()) return false
                 }
             }
-
         }
-        if(!validData){
-            milestonesAdapter.notifyDataSetChanged()
+        return true
+    }*/
+
+    private fun checkData(): Boolean {
+        var validData = true
+        run breaking@{
+            milestonesAdapter.currentList.forEachIndexed { index, model ->
+                if (model.days == null) {
+                    validData = false
+                    model.isError = true
+                    binding.recyclerView.smoothScrollToPosition(index)
+                    milestonesAdapter.notifyDataSetChanged()
+                    return@breaking
+                } else {
+                    validData = true
+                    model.isError = false
+                }
+            }
         }
         return validData
-    }
-
-    companion object {
-        const val WORK_DAYS_MIN = 1
-        const val WORK_DAYS_MAX = 365
     }
 }
