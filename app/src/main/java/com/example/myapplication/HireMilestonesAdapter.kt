@@ -45,9 +45,6 @@ class HireMilestonesAdapter(
                 delete.setOnClickListener {
                     onDeleteClick(item, absoluteAdapterPosition)
                 }
-                if (item.isError) {
-                    checkData()
-                }
                 days.doAfterTextChanged {
                     checkDays(context, binding, absoluteAdapterPosition)
                 }
