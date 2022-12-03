@@ -62,33 +62,17 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-/*    private fun checkData(): Boolean {
+    private fun checkData(): Boolean {
         milestonesAdapter.currentList.indices.forEach { position ->
             binding.recyclerView.findViewHolderForAdapterPosition(position)?.let {
                 with(it as HireMilestonesAdapter.ViewHolder) {
-                    if (checkData().not()) return false
+                    if (checkData().not()) {
+                        milestonesAdapter.notifyDataSetChanged()
+                        return false
+                    }
                 }
             }
         }
         return true
-    }*/
-
-    private fun checkData(): Boolean {
-        var validData = true
-        run breaking@{
-            milestonesAdapter.currentList.forEachIndexed { index, model ->
-                if (model.days == null) {
-                    validData = false
-                    model.isError = true
-                    binding.recyclerView.smoothScrollToPosition(index)
-                    milestonesAdapter.notifyDataSetChanged()
-                    return@breaking
-                } else {
-                    validData = true
-                    model.isError = false
-                }
-            }
-        }
-        return validData
     }
 }
