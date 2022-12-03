@@ -47,8 +47,13 @@ class HireMilestonesAdapter(
                 delete.setOnClickListener {
                     onDeleteClick(item, absoluteAdapterPosition)
                 }
+                if(!item.daysError.isNullOrEmpty()){
+                    binding.textInputLayoutDays.error = context.getString(R.string.please_enter_days)
+                }
                 days.doAfterTextChanged {
-                    checkDays(context, binding, absoluteAdapterPosition)
+                    if(checkDays(context, binding, absoluteAdapterPosition)){
+                        item.days = days.text.toString()
+                    }
                 }
             }
         }
