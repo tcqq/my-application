@@ -64,15 +64,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkData(): Boolean {
         var validData = true
-        milestonesAdapter.currentList.forEachIndexed { index, model ->
-            if (model.days.isNullOrEmpty()) {
-                binding.recyclerView.smoothScrollToPosition(index)
-                model.daysError = getString(R.string.please_enter_days)
-                validData = false
-                return@forEachIndexed
-            }else{
-                model.daysError = null
+        run breaking@ {
+            milestonesAdapter.currentList.forEachIndexed { index, model ->
+                if (model.days.isNullOrEmpty()) {
+                    binding.recyclerView.smoothScrollToPosition(index)
+                    model.daysError = getString(R.string.please_enter_days)
+                    validData = false
+                    return@breaking
+                }else{
+                    model.daysError = null
+                }
             }
+
         }
         if(!validData){
             milestonesAdapter.notifyDataSetChanged()
