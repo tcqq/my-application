@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             if (model.days.isNullOrEmpty()) {
                 binding.recyclerView.smoothScrollToPosition(index)
                 model.daysError = getString(R.string.please_enter_days)
-                milestonesAdapter.notifyDataSetChanged()
+                milestonesAdapter.notifyItemChanged(index)
                 validData = false
                 return@forEachIndexed
             }
