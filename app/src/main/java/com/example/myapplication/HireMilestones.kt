@@ -9,5 +9,5 @@ data class HireMilestones(
     var days: String? = null,
     var title: String? = null,
     var amount: String? = null,
-    var daysError : String ? = null,
+    var isError: Boolean = false
 )
